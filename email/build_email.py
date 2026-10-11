@@ -10,8 +10,11 @@ AR="'Amiri','Scheherazade New','Traditional Arabic','Geeza Pro','Noto Naskh Arab
 RAW="https://raw.githubusercontent.com/hammaddsgn/first-light/main/assets/pins/"
 GIF="https://raw.githubusercontent.com/hammaddsgn/first-light/main/assets/gif/"
 BAND=""
+IMAGES=False  # Gmail connector strips <img> from sent mail, so the daily email is text only. Set True only if a send route that keeps images is found.
 TITLE="First Light"
-def band(name,alt,h): return f'<tr><td style="padding:40px 0 0;font-size:0;line-height:0"><img src="{GIF}{name}.gif" width="620" height="{h}" alt="{alt}" style="display:block;width:100%;height:auto;border:0"></td></tr>'
+def band(name,alt,h):
+    if not IMAGES: return ""
+    return f'<tr><td style="padding:40px 0 0;font-size:0;line-height:0"><img src="{GIF}{name}.gif" width="620" height="{h}" alt="{alt}" style="display:block;width:100%;height:auto;border:0"></td></tr>'
 ALIAS={"clouds66":"cbacfca311de95817bc618ac1afcaaea","clouds61":"60f54910db70fa6346438c2e5d8a376f","mist36":"e2dd4744aeda04723df16f4cc382ff8e","sky52":"885f7ca31b0d3ad3e3f2fae7d19f52d5","ducks17":"9a3fad2479527ae6b54c6f8c2c89f143","timing30":"65d3d5f43611445a8afcfdd0cdb25444","future33":"7b320d9ee0829ba51b26800381d2688b","godwins32":"95ef4c9b2af0850a7d4322f2ceb13c24","man38":"361307d5fb2f3164609156cc00760c31"}
 def pin(x): return f"{RAW}{ALIAS.get(x,x)}.jpg"
 class _P(dict):
@@ -31,13 +34,21 @@ def section(inner):
             f'<tr><td style="padding:44px 0 0;border-top:1px solid {LINE}"></td></tr>'
             f'<tr><td>{inner}</td></tr></table></td></tr>')
 def crop(key, h, shift, alt, radius=14):
+    if not IMAGES: return ""
     return (f'<div style="height:{h}px;overflow:hidden;border-radius:{radius}px;background:#C9D6CD">'
             f'<img src="{PINS[key]}" width="540" alt="{e(alt)}" style="display:block;width:100%;height:auto;margin-top:-{shift}px;border:0"></div>')
+def _quote(alt, cap):
+    t=alt.split(":",1)[1].strip() if alt.lower().startswith("quote poster") and ":" in alt else ""
+    if not t: return ""
+    return (f'<div style="text-align:center;padding:6px 10px"><div style="font:italic 400 21px/1.5 {SERIF};color:{GREEN}">{e(t)}</div>'
+            f'<div style="margin-top:8px;font:italic 400 13px/1.4 {SERIF};color:{MUTED}">{cap}</div></div>')
 def poster(key, alt, w=300, cap="From your notetoself board"):
+    if not IMAGES: return _quote(alt, cap)
     return (f'<div style="text-align:center"><img src="{PINS[key]}" width="{w}" alt="{e(alt)}" '
             f'style="display:inline-block;width:{w}px;max-width:100%;height:auto;border-radius:14px;border:0">'
             f'<div style="margin-top:10px;font:italic 400 13px/1.4 {SERIF};color:{MUTED}">{cap}</div></div>')
 def poster_pair(k1,a1,k2,a2):
+    if not IMAGES: return _quote(a1,"From your notetoself board")+_quote(a2,"From your notetoself board")
     cell=lambda k,al: (f'<td width="50%" valign="top" style="padding:0 6px;text-align:center"><img src="{PINS[k]}" width="260" alt="{e(al)}" '
                        f'style="width:100%;max-width:260px;height:auto;border-radius:14px;border:0;display:inline-block"></td>')
     return (f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>{cell(k1,a1)}{cell(k2,a2)}</tr></table>'
