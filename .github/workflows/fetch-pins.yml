@@ -1,6 +1,10 @@
 name: Fetch pins
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - assets/pins.txt
+      - scripts/fetch_pins.py
 permissions:
   contents: write
 jobs:
