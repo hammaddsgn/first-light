@@ -7,18 +7,16 @@ CORAL="#D9583B"; LINK="#B8432A"; CARD="#FBFCFA"; OUTER="#E9EEE9"; TINT="#FFF1E8"
 SERIF="Georgia,'Times New Roman',serif"
 AR="'Amiri','Scheherazade New','Traditional Arabic','Geeza Pro','Noto Naskh Arabic',serif"
 
-def pin(h): return f"https://i.pinimg.com/736x/{h[:2]}/{h[2:4]}/{h[4:6]}/{h}.jpg"
-PINS={
- "clouds66":pin("cbacfca311de95817bc618ac1afcaaea"),
- "clouds61":pin("60f54910db70fa6346438c2e5d8a376f"),
- "mist36":pin("e2dd4744aeda04723df16f4cc382ff8e"),
- "sky52":pin("885f7ca31b0d3ad3e3f2fae7d19f52d5"),
- "ducks17":pin("9a3fad2479527ae6b54c6f8c2c89f143"),
- "timing30":pin("65d3d5f43611445a8afcfdd0cdb25444"),
- "future33":pin("7b320d9ee0829ba51b26800381d2688b"),
- "godwins32":pin("95ef4c9b2af0850a7d4322f2ceb13c24"),
- "man38":pin("361307d5fb2f3164609156cc00760c31"),
-}
+RAW="https://raw.githubusercontent.com/hammaddsgn/first-light/main/assets/pins/"
+GIF="https://raw.githubusercontent.com/hammaddsgn/first-light/main/assets/gif/"
+BAND=""
+TITLE="First Light"
+def band(name,alt,h): return f'<tr><td style="padding:40px 0 0;font-size:0;line-height:0"><img src="{GIF}{name}.gif" width="620" height="{h}" alt="{alt}" style="display:block;width:100%;height:auto;border:0"></td></tr>'
+ALIAS={"clouds66":"cbacfca311de95817bc618ac1afcaaea","clouds61":"60f54910db70fa6346438c2e5d8a376f","mist36":"e2dd4744aeda04723df16f4cc382ff8e","sky52":"885f7ca31b0d3ad3e3f2fae7d19f52d5","ducks17":"9a3fad2479527ae6b54c6f8c2c89f143","timing30":"65d3d5f43611445a8afcfdd0cdb25444","future33":"7b320d9ee0829ba51b26800381d2688b","godwins32":"95ef4c9b2af0850a7d4322f2ceb13c24","man38":"361307d5fb2f3164609156cc00760c31"}
+def pin(x): return f"{RAW}{ALIAS.get(x,x)}.jpg"
+class _P(dict):
+    def __missing__(self,k): return pin(k)
+PINS=_P()
 e=html.escape
 
 def p(t, size=16, color=BODY, mb=14):
@@ -72,12 +70,12 @@ def page(subject, preheader, date_line, hero_inner, sections, footer_note):
 <table role="presentation" class="w" width="620" cellpadding="0" cellspacing="0" border="0" style="width:620px;max-width:100%;background:{CARD};border-radius:20px">
 <tr><td style="padding:40px 40px 0">
  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-  <td style="font:italic 400 34px/1 {SERIF};letter-spacing:-0.02em;color:{GREEN}">First Light</td>
+  <td style="font:italic 400 34px/1 {SERIF};letter-spacing:-0.02em;color:{GREEN}">{TITLE}</td>
   <td align="right" style="font:400 14px/1.3 {SERIF};color:{MUTED}">{date_line}</td></tr></table>
 </td></tr>
 <tr><td style="padding:28px 40px 0">{hero_inner}</td></tr>
 {body}
-<tr><td style="padding:48px 40px 40px"><div style="border-top:1px solid {LINE};padding-top:22px;font:400 13px/1.6 {SERIF};color:{MUTED}">{footer_note}</div></td></tr>
+{BAND}<tr><td style="padding:48px 40px 40px"><div style="border-top:1px solid {LINE};padding-top:22px;font:400 13px/1.6 {SERIF};color:{MUTED}">{footer_note}</div></td></tr>
 </table></td></tr></table></body></html>'''
 
 # ---------------- WEEKDAY SAMPLE (Monday 12 October 2026) ----------------
@@ -132,6 +130,8 @@ def weekday():
         +p("The Capgemini graduate deadline is 30 October. Everything else on this page can wait until the first application is in.",17,INK,0)))
     foot=("First Light daily briefing, sent at 07:48 on weekdays and weekends. This is a design preview with sample content. "
           "To add, remove or reorder sections, edit the First Light control panel in Google Drive, or tell Claude what to change.")
+    global BAND
+    BAND=band("waves","Soft green waves gently moving",40)
     return subject, pre, page(subject,pre,"Monday 12 October 2026",hero,S,foot)
 
 # ---------------- WEEKEND PREVIEW (Sunday) ----------------
@@ -170,6 +170,8 @@ def weekend():
         +p("Monday's email brings the jobs back.",17,INK,0)))
     foot=("First Light daily briefing, weekend edition. This is a design preview with sample content. "
           "To add, remove or reorder sections, edit the First Light control panel in Google Drive, or tell Claude what to change.")
+    global BAND
+    BAND=band("night","A crescent moon over a dark green night sky, with stars slowly twinkling",60)
     return subject, pre, page(subject,pre,"Sunday 11 October 2026",hero,S,foot)
 
 if __name__=="__main__":

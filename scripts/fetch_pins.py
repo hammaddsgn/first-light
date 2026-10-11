@@ -6,8 +6,8 @@ out = root / "assets" / "pins"; out.mkdir(parents=True, exist_ok=True)
 fail = 0
 for line in (root / "assets" / "pins.txt").read_text().splitlines():
     if not line.strip() or line.startswith("#"): continue
-    key, h = line.split()[:2]
-    dest = out / f"{key}.jpg"
+    h = line.split()[-1]; key = h
+    dest = out / f"{h}.jpg"
     if dest.exists() and dest.stat().st_size > 1000: continue
     url = f"https://i.pinimg.com/736x/{h[:2]}/{h[2:4]}/{h[4:6]}/{h}.jpg"
     try:
